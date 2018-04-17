@@ -1,0 +1,9 @@
+#!/bin/bash
+	
+mkdir VRAC
+n=1;
+cat listeOK | while read i;
+do
+    echo $i > VRAC/$n.mp3;
+    n=$(($n + 1));
+done

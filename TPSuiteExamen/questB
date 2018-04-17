@@ -1,0 +1,8 @@
+#!/bin/bash
+cd ARTISTES/$1
+# for i in *
+# do
+#     album=$(echo `../../MP3INFO "$i"` | cut -f2 -d ":")
+#     date=$(echo `../../../MP3INFO "$i"` | cut -f4 -d ":")
+#     echo $date"-"$album
+# done | sort -n | cut -f2 -d "-"

@@ -1,0 +1,185 @@
+TP1 :
+
+Question 1 :
+
+cd Téléchargements/
+mkdir TP0
+cd TP0/
+mkdir src include obj bin
+cd src
+vi Main.cpp
+vi MatIO.cpp
+vi MatArith.cpp
+cd ..
+cd include
+vi MatIO.h
+vi MatArith.h
+cd../src/
+g++ -c Main.cpp MatIO.cpp MatArith.cpp
+mv Main.o MatIO.o MatArith.o ../obj/
+cd ../obj/
+g++ –o MutlMat MatIO.o MatArith.o Main.o
+mv MultMat ../bin/
+
+Question 2 :
+
+- MatIO.h :
+
+#include <iostream>
+using namespace std;
+
+void lire(int A[][3]);
+void afficher(int A[][3]);
+
+- MatArith.h :
+
+#include <iostream>
+using namespace std;
+
+void addition(int P[][3], int A[][3], int B[][3]);
+void multiplication(int M[][3], int A[][3], int B[][3]);
+
+- Main.cpp :
+
+#include <iostream>
+using namespace std;
+
+int main() {
+        int A[3][3];
+        int B[3][3];
+        int Plus[3][3];
+        int Mult[3][3];
+
+        lire(A);
+        lire(B);
+        addition(Plus, A, B);
+        multiplication(Mult, A, B);
+        afficher(Plus);
+        afficher(Mult);
+}
+
+- MatIO.cpp :
+
+#include <iostream>
+#include "../include/MatIO.h"
+using namespace std;
+
+void lire(int A[][3]) {
+	for(int i(0); i < 3; i++) {
+		for(int j(0); j < 3; j++) { 
+			cout << "Cellule [" << i << "][" << j << "] : ";
+			cin >> A[i][j];
+		}
+	}
+}
+
+void afficher(int P[][3]) {
+	for(int i(0); i < 3; i++) {
+		for(int j(0); j < 3; j++) {
+			cout << P[i][j] << " ";
+		}
+        cout << endl;
+	}
+}
+
+- MatArith.cpp :
+
+#include <iostream>
+#include "../include/MatArith.h"
+using namespace std;
+
+void addition(int P[][3], int A[][3], int B[][3]) {
+	for(int i(0); i < 3; i++) {
+		for(int j(0); j < 3; j++) {
+			P[i][j] = A[i][j] + B[i][j];
+        }
+	}
+}
+
+void multiplication(int M[][3], int A[][3], int B[][3]) {
+    int n1;
+    int n2;
+    int add = 0;
+    int s = 0;
+	for(int i(0); i < 3; i++) {
+		for(int j(0); i < 3; i++) {
+            for(int k(0); k < 3; k++) {
+			    n1 = A[i][j];
+                n2 = B[j][i];
+                s = n1 * n2;
+                add += s;
+            }
+        M[i][j] = add;
+        add = 0;
+        s = 0;
+		}
+	}
+}
+
+Question 3 :
+
+vi matrices.txt
+
+./bin/MultMat < Matrice.txt
+
+Exercice 2 : Librairie Matrice.a :
+
+Question 4 :
+
+mkdir libMatrice
+mv src libMatrice
+mv obj libMatrice
+cd include/
+vi Matrice.h
+cat MatArith.h MatIO.h > Matrice.h
+vi Matrice.h //Pour supprimer le « include… » en trop.
+rm MatArith.h MatIO.h
+cd ..
+cd obj/
+ar -q libMatrice.a MatArith.o MatIO.o
+mv libMatrice.a ../lib
+cd ..
+mv include libMatrice
+mkdir TP0
+cd TP0/
+mkdir src obj bin
+cd ../
+mv Mainc.cpp TP0/src/
+mv Main.o TP0/obj/
+mv MultMat TPO0/bin/
+
+Question 5 :
+
+Seuls les chemins d’accès aux différents fichiers ont été modifiés :
+
+Main.cpp :
+#include "../../libMatrice/include/Matrice.h"
+
+MatIO.cpp et MatArith.cpp :
+#include "../include/Matrice.h"
+
+Exercice 3 : L’utilitaire Make :
+
+Question 6 :
+
+EXEC=MultMat
+
+all: $(EXEC)
+
+MultMat: Main.o MatArith.o MatIO.o
+	g++ std=c++11 -c Main.o MatArith.o MatIO.o $(EXEC)
+
+Main.o: Main.c MatArith.h MatIO.h
+	g++ std=c++11 -o Main.o -c Main.c
+
+MatArith.o: MatArith.c
+	g++ std=c++11 -o MatArith.o -c MatArith.c
+
+MatIO.o: MatIO.c
+	g++ std=c++11 -o MatIO.o -c MatIO.c
+
+clean:
+	rm -f *.o
+
+clear: clean
+	rm -f $(EXEC)
